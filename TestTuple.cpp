@@ -42,25 +42,5 @@ int main() {
     T2.serializeFromData(buf, len);
     std::cout << "New T2: " << T2 << std::endl;
 
-
-    int pageSize = 4096;
-    int fixedRecordLength = 28;
-
-    int recordLengthAndSlot = fixedRecordLength + 1;
-    // substract bytes use for page ids and slot count
-    pageSize -= 3 * sizeof(int);
-    std::cout << "pageSize: " << pageSize << std::endl;
-    std::cout << "recordLengthAndSlot: " << recordLengthAndSlot << std::endl;
-
-    // now compute floor of remaining space
-    int slots = (int) round(floor(pageSize / recordLengthAndSlot));
-    std::cout << "pageSize / recordLengthAndSlot: " << (pageSize / recordLengthAndSlot) << std::endl;
-
-    std::cout << "floor(pageSize / recordLengthAndSlot): " << floor(pageSize / recordLengthAndSlot) << std::endl;
-
-    std::cout << "slots: " << slots << std::endl;
-
-    std::string s = "Cambumbo" + std::to_string(2);
-    std::cout << "s: " << s << std::endl;
-
+    
 }

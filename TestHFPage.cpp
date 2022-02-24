@@ -20,6 +20,8 @@ int getRandom(int start, int end);
 
 void readTuple(int pageId, int slotId, coquisql::HFPage *pPage);
 
+void updateTuple(int pageId, int slotId, coquisql::HFPage *pPage);
+
 int main() {
     std::cout << "Test HFPage" << std::endl;//
 
@@ -60,10 +62,59 @@ int main() {
     addData(P, data);
     readTuple(0, 2, P);
 
+    random = getRandom(0, 30);
+    updateTuple(0, random, P);
 
 
 }
 
+void updateTuple(int pageId, int slotId, coquisql::HFPage *pPage) {
+    coquisql::Tuple *T, *T2;
+    coquisql::FixedStringValue *F;
+    coquisql::RecordId rid = {pageId, slotId};
+    int code = 0;
+
+    T = new coquisql::Tuple(3);
+    T->addColumn(new coquisql::IntegerValue(1000));
+    F = coquisql::FixedStringValue::buildFromString("Josefo" + std::to_string(-1), 20);
+    T->addColumn((coquisql::Value*) F);
+    T->addColumn(new coquisql::IntegerValue(-1 * 20));
+
+    std::cout << "Update Record" << std::endl;
+    std::cout << "Tuple T: " << *T << std::endl;
+
+
+    code = pPage->readRecord(rid, T);
+    if (code ==0){
+        std::cout << "Read Tuple T: " << *T << std::endl;
+    }
+    else {
+        std::cout << "Record not found  " << std::endl;
+    }
+
+    T2 = new coquisql::Tuple(3);
+    T2->addColumn(new coquisql::IntegerValue(-2));
+    F = coquisql::FixedStringValue::buildFromString("Pepe" + std::to_string(-1), 20);
+    T2->addColumn((coquisql::Value*) F);
+    T2->addColumn(new coquisql::IntegerValue(-1 * 30));
+    std::cout << "Tuple for Update Tuple T2: " << *T2 << std::endl;
+
+    code = pPage->updateRecord(rid, T2);
+    if (code ==0){
+        std::cout << "Updated Tuple: " << std::endl;
+    }
+    else {
+        std::cout << "Record not found  " << std::endl;
+    }
+    code = pPage->readRecord(rid, T);
+    if (code ==0){
+        std::cout << "Read Updated Tuple T: " << *T << std::endl;
+    }
+    else {
+        std::cout << "Record not found  " << std::endl;
+    }
+
+}
 void readTuple(int pageId, int slotId, coquisql::HFPage *pPage) {
     coquisql::Tuple *T;
     coquisql::FixedStringValue *F;
